@@ -64,9 +64,6 @@ services:
   nginx:
     container_name: con_nginx
     build: ./nginx
-    # build:
-    #   context: ./nginx
-    #   dockerfile: Dockerfile-local
     ports:
       - "80:80"
       - "443:443"
