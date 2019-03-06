@@ -124,14 +124,14 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
-STATIC_URL = '/static/'
+STATIC_URL = '/www/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, '_static')
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'backend', 'static'),
+    os.path.join(BASE_DIR, 'static'),
 ]
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/www/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, '_media')
 
 SENTRY_DSN = os.environ.get('SENTRY_DSN', '')
@@ -169,7 +169,7 @@ LOGGING = {
 }
 
 AWS_ACCESS_KEY = ''
-AWS_SECRET_KEY = '+sS2rbfR/1gBiPsvtRhgSodYF4'
+AWS_SECRET_KEY = ''
 S3_BUCKET = os.environ.get('S3_BUCKET')
 AWS_S3_URL = 'https://s3.amazonaws.com'
 API_DOMAIN = 'api.yourweb.com'
