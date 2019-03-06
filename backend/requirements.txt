@@ -1,0 +1,16 @@
+Django
+gunicorn
+redis
+https://github.com/celery/celery/zipball/master#egg=celery
+django-redis
+djangorestframework
+psycopg2-binary
+requests
+https://github.com/darklow/django-suit/tarball/v2#egg=django-suit
+whitenoise
+djangorestframework-jwt  # JSON Web Token for DRF
+django-rest-swagger
+django-extensions  # More command for manage.py: reset_db
+django-filter
+Pillow
+kombu

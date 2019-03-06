@@ -1,0 +1,101 @@
+version: '3.7'
+services:
+  backend:
+    container_name: con_backend
+    build: ./backend
+    expose:
+      - "8000"
+    links:
+      - postgres:postgres
+      - redis:redis
+    volumes:
+      - ./backend:/usr/src/app/backend
+      - ./backend/static:/usr/src/app/backend/static
+    depends_on:
+      - postgres
+    env_file: .env
+    command: gunicorn src.wsgi:application -w 2 -b 0.0.0.0:8000 --reload
+
+  frontend:
+    container_name: con_frontend
+    build: ./frontend
+    expose:
+      - "3000"
+    volumes:
+      - ./frontend:/usr/src/app/frontend
+      - node-modules:/usr/src/app/frontend/node_modules
+    command: yarn start
+
+  postgres:
+    container_name: con_pg
+    image: postgres:latest
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+  rabbit:
+    container_name: con_rabbit
+    image: rabbitmq:latest
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  celery:
+    container_name: con_celery
+    build:
+      context: ./backend
+      dockerfile: Dockerfile-celery
+    volumes:
+      - celery_data:/usr/src/app/backend/celery/data
+      - ./backend:/usr/src/app/backend
+    links:
+      - redis
+      - postgres
+      - rabbit
+    depends_on:
+      - rabbit
+    env_file: .env
+    command: ./run_celery.sh
+
+  nginx:
+    container_name: con_nginx
+    build: ./nginx
+    # build:
+    #   context: ./nginx
+    #   dockerfile: Dockerfile-local
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /www/static
+    links:
+      - backend:backend
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+
+  redis:
+    container_name: con_redis
+    image: redis:latest
+    command: redis-server /usr/local/etc/redis/redis.conf --appendonly yes
+    hostname: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis:/usr/local/etc/redis
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 10000
+        hard: 10000
+
+volumes:
+  pg_data:
+  node-modules:
+  celery_data:

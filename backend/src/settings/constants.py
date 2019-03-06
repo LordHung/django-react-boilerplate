@@ -1,0 +1,1 @@
+ENV = 'src.settings.development'

@@ -1,0 +1,7 @@
+FROM python:3.7
+
+ADD requirements.txt /usr/src/app/backend/requirements.txt
+
+WORKDIR /usr/src/app/backend/
+
+RUN pip install -r requirements.txt
